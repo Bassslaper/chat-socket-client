@@ -42,14 +42,10 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
 
 export default {
   layout: 'empty',
-  sockets: {
-    connect () {
-      console.log('Conection on client is Done')
-    }
-  },
   data: () => ({
     valid: true,
     name: '',
@@ -62,11 +58,29 @@ export default {
       v => !!v || 'Введите комнату'
     ]
   }),
+  head: {
+    title: 'Вход в NUXT CHAT'
+  },
+  sockets: {
+    connect () {
+      console.log('Conection on client is Done')
+    }
+  },
 
   methods: {
+    ...mapMutations({
+      setUser: 'setUser'
+    }),
     submit () {
       if (this.$refs.form.validate()) {
-        console.log('Добро пожаловать')
+        const user = {
+          name: this.name,
+          room: this.room
+        }
+
+        this.setUser(user)
+
+        this.$router.push('/chat')
       }
     }
 
